@@ -20,4 +20,23 @@ public class EmployeeController {
     public List <Employee> showCounter () {
         return employeeService.getAllEmployees();
     }
+
+    @GetMapping("/salary/sum")
+    public Integer findSumSalaries (){
+        return employeeService.findSumSalaries();
+    }
+    @GetMapping("/salary/min")
+    public Employee findMinSalary (){
+        return employeeService.findMinSalary();
+    }
+    @GetMapping("/salary/max")
+    public Employee findMaxSalary (){
+        return employeeService.findMaxSalary();
+    }
+
+    @GetMapping("/salary/high-salary")
+    public List<Employee> findHighSalary (){
+        return employeeService.findHighSalary();
+    }
+
 }
