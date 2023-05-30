@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface EmployeeService {
     List <Employee> getAllEmployees();
-
+    Integer findSumSalaries();
+    Employee findMinSalary();
+    Employee findMaxSalary();
+    List <Employee> findHighSalary();
 }
