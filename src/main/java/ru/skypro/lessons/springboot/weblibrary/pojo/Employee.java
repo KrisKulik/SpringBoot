@@ -3,7 +3,7 @@ package ru.skypro.lessons.springboot.weblibrary.pojo;
 public class Employee {
     private String name;
     private int salary;
-    private int idGeneration = 1;
+    private static int idGeneration = 1;
     private int id;
 
     public Employee(String name, int salary) {

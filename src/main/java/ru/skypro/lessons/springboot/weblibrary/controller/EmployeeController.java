@@ -59,6 +59,6 @@ public class EmployeeController {
     }
     @GetMapping ("/salaryHigherThan")
     public List<Employee> getEmployeeWithSalaryHigherThan (@RequestParam int salary) {
-        return getEmployeeWithSalaryHigherThan(salary);
+        return employeeService.getEmployeeWithSalaryHigherThan(salary);
     }
 }
