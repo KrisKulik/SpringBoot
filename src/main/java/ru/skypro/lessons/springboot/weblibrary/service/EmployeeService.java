@@ -1,18 +1,25 @@
 package ru.skypro.lessons.springboot.weblibrary.service;
 
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeFullInfo;
 import ru.skypro.lessons.springboot.weblibrary.pojo.Employee;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmployeeService {
-    List <Employee> getAllEmployees();
+    List <EmployeeFullInfo> getAllEmployees();
     Integer findSumSalaries();
-    Employee findMinSalary();
-    Employee findMaxSalary();
-    List <Employee> findHighSalary();
-    List<Employee> addEmployees(List <Employee> employeeList);
-    void editEmployee(int id, Employee employee);
-    Employee getEmployee(int id);
-    void deleteEmployee(int id);
-    List<Employee> getEmployeeWithSalaryHigherThan(double salary);
+    Optional <EmployeeFullInfo> findMinSalary();
+    Optional<EmployeeFullInfo> findMaxSalary();
+    List <EmployeeFullInfo> findHighSalary();
+    void addEmployees(EmployeeDTO employeeDTO);
+    void editEmployee(EmployeeDTO employeeDTO);
+    EmployeeDTO getEmployeeById(Integer id);
+    void deleteEmployeeById(Integer id);
+    List <EmployeeFullInfo> getEmployeeWithSalaryHigherThan(double salary);
+    List<EmployeeFullInfo> getEmployeeByPosition(Integer position);
+    EmployeeFullInfo getEmployeeByIdFullInfo(Integer id);
+
+
 }

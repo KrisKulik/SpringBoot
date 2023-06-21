@@ -1,12 +1,14 @@
 package ru.skypro.lessons.springboot.weblibrary.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeFullInfo;
 import ru.skypro.lessons.springboot.weblibrary.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary.service.EmployeeService;
 
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -17,48 +19,46 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
     @GetMapping
-    public List <Employee> showCounter () {
+    public List<EmployeeFullInfo> showCounter () {
         return employeeService.getAllEmployees();
     }
-
     @GetMapping("/salary/sum")
     public Integer findSumSalaries (){
         return employeeService.findSumSalaries();
     }
     @GetMapping("/salary/min")
-    public Employee findMinSalary (){
+    public Optional<EmployeeFullInfo> findMinSalary (){
         return employeeService.findMinSalary();
     }
     @GetMapping("/salary/max")
-    public Employee findMaxSalary (){
+    public Optional<EmployeeFullInfo> findMaxSalary (){
         return employeeService.findMaxSalary();
     }
 
     @GetMapping("/salary/high-salary")
-    public List<Employee> findHighSalary (){
+    public List<EmployeeFullInfo> findHighSalary (){
         return employeeService.findHighSalary();
     }
     @PostMapping("/")
-    public List <Employee> addEmployees(@RequestBody List <Employee> employeeList) {
-        return employeeService.addEmployees(employeeList);
+    public void addEmployees(@RequestBody EmployeeDTO employeeDTO) {
+            employeeService.addEmployees(employeeDTO);
 
     }
-    @PutMapping("/{id}")
-    public void editEmployee(@PathVariable int id,
-                             @RequestBody Employee employee) {
-       employeeService.editEmployee(id, employee);
+    @PutMapping("/")
+    public void editEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        employeeService.editEmployee(employeeDTO);
     }
 
-    @GetMapping ("/{id}")
-    public Employee getEmployee(@PathVariable int id) {
-       return employeeService.getEmployee(id);
+    @GetMapping("/{id}/info")
+    public EmployeeFullInfo getEmployeeByIdFullInfo(@PathVariable Integer id) {
+        return employeeService.getEmployeeByIdFullInfo(id);
     }
     @DeleteMapping ("/{id}")
-    public void deleteEmployee (@PathVariable int id) {
-        employeeService.deleteEmployee(id);
+    public void deleteEmployee (@PathVariable Integer id) {
+        employeeService.deleteEmployeeById(id);;
     }
     @GetMapping ("/salaryHigherThan")
-    public List<Employee> getEmployeeWithSalaryHigherThan (@RequestParam int salary) {
+    public List<EmployeeFullInfo> getEmployeeWithSalaryHigherThan (@RequestParam int salary) {
         return employeeService.getEmployeeWithSalaryHigherThan(salary);
     }
 }

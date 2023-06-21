@@ -1,15 +1,15 @@
 package ru.skypro.lessons.springboot.weblibrary.service;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.lessons.springboot.weblibrary.exceptions.EmployeeNotFoundException;
-import ru.skypro.lessons.springboot.weblibrary.exceptions.EmployeeNotValidException;
-import ru.skypro.lessons.springboot.weblibrary.pojo.Employee;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeFullInfo;
 import ru.skypro.lessons.springboot.weblibrary.repository.EmployeeRepository;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -20,77 +20,63 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.getAllEmployees();
+    public List<EmployeeFullInfo> getAllEmployees() {
+        return employeeRepository.findAllEmployeeFullInfo();
     }
 
     @Override
     public Integer findSumSalaries() {
-        int sum = 0;
-        List<Integer> sumSalariesList = employeeRepository.getAllEmployees().stream().map(employee -> employee.getSalary()).toList();
-        for (Integer salary : sumSalariesList) {
-            sum = sum + salary;
-        }
-        return sum;
+        return getAllEmployees().stream().flatMapToInt(employee -> IntStream.of(employee.getSalary())).sum();
     }
 
     @Override
-    public Employee findMinSalary() {
-        return employeeRepository.getAllEmployees().stream().min(Comparator.comparing(employee -> employee.getSalary())).orElse(null);
+    public Optional<EmployeeFullInfo> findMinSalary() {
+        return getAllEmployees().stream().min(Comparator.comparingDouble(EmployeeFullInfo::getSalary));
     }
 
     @Override
-    public Employee findMaxSalary() {
-        return employeeRepository.getAllEmployees().stream().max(Comparator.comparing(employee -> employee.getSalary())).orElse(null);
+    public Optional<EmployeeFullInfo> findMaxSalary() {
+        return getAllEmployees().stream().max(Comparator.comparingDouble(EmployeeFullInfo::getSalary));
     }
 
     @Override
-    public List<Employee> findHighSalary() {
-        int employeeRepositorySize = employeeRepository.getAllEmployees().size();
+    public List<EmployeeFullInfo> findHighSalary() {
+        int employeeRepositorySize = getAllEmployees().size();
         int averageSalary = findSumSalaries()/employeeRepositorySize;
-        return employeeRepository.getAllEmployees().stream().filter(employee -> employee.getSalary() > averageSalary).toList();
+        return getAllEmployees().stream().filter(e -> e.getSalary()>averageSalary).collect(Collectors.toList());
     }
-    @Override
-    public List<Employee> addEmployees(List<Employee> employeeList) {
-        Optional<Employee> incorrectEmployee = employeeList.stream()
-                .filter(employee -> employee.getSalary() <= 0 || employee.getName() == null || employee.getName().isEmpty())
-                .findFirst();
 
-        if(incorrectEmployee.isPresent()){
-            throw new EmployeeNotValidException(incorrectEmployee.get());
+    @Override
+    public void addEmployees(EmployeeDTO employeeDTO) {
+            employeeRepository.save(employeeDTO.toEmployee());
         }
-        return employeeList.stream()
-                .map(employee -> new Employee(employee.getName(), employee.getSalary()))
-                .map(employeeRepository::addEmployee)
-                .collect(Collectors.toList());
+
+    @Override
+    public void editEmployee(EmployeeDTO employeeDTO) {
+            employeeRepository.save(employeeDTO.toEmployee());
+        }
+
+    @Override
+    public EmployeeDTO getEmployeeById(Integer id) {
+        return EmployeeDTO.fromEmployee(employeeRepository.findById(id).orElseThrow(IllegalArgumentException::new));
+
     }
 
     @Override
-    public void editEmployee(int id, Employee employee) {
-        Employee oldEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
-        oldEmployee.setSalary(employee.getSalary());
-        oldEmployee.setName(employee.getName());
-        employeeRepository.editEmployee(id, oldEmployee);
+    public void deleteEmployeeById(Integer id) {
+            employeeRepository.deleteById(id);
+        }
+    @Override
+    public List<EmployeeFullInfo> getEmployeeWithSalaryHigherThan(double salary) {
+        return getAllEmployees().stream().filter(employee -> employee.getSalary() > salary).collect(Collectors.toList());
+        }
+
+    public List<EmployeeFullInfo> getEmployeeByPosition(Integer position) {
+        return employeeRepository.findEmployeeByPosition(position);
+        }
+    @Override
+    public EmployeeFullInfo getEmployeeByIdFullInfo(Integer id) {
+        return employeeRepository.findByIdFullInfo(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    @Override
-    public Employee getEmployee(int id) {
-        return employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
-    }
-
-    @Override
-    public void deleteEmployee(int id) {
-        employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(id));
-        employeeRepository.deleteEmployee(id);
-    }
-
-    @Override
-    public List<Employee> getEmployeeWithSalaryHigherThan(double salary) {
-        return employeeRepository.getAllEmployees().stream()
-                .filter(employee -> employee.getSalary() > salary)
-                .collect(Collectors.toList());
-    }
 }
