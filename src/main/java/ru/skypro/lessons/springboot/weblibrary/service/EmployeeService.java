@@ -20,5 +20,5 @@ public interface EmployeeService {
     List<EmployeeFullInfo> getEmployeeByPosition(Integer position);
     EmployeeFullInfo getEmployeeByIdFullInfo(Integer id);
     List<EmployeeDTO> getEmployeeByPage(Integer page);
-    EmployeeDTO findTheHighestSalary();
+    List<EmployeeDTO> findTheHighestSalary();
 }

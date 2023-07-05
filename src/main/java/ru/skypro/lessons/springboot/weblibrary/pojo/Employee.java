@@ -3,7 +3,7 @@ package ru.skypro.lessons.springboot.weblibrary.pojo;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "employee")
+@Table (name = "employees")
 public class Employee {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,7 +11,7 @@ public class Employee {
     private String name;
     private Integer salary;
     private static int idGeneration = 1;
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
 
@@ -47,6 +47,22 @@ public class Employee {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public static int getIdGeneration() {
+        return idGeneration;
+    }
+
+    public static void setIdGeneration(int idGeneration) {
+        Employee.idGeneration = idGeneration;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     @Override

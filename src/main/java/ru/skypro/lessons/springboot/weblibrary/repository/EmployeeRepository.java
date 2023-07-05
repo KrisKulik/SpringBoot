@@ -26,10 +26,10 @@ public interface EmployeeRepository extends CrudRepository <Employee, Integer> {
             "FROM Employee e join fetch Position p " +
             "WHERE e.position = p AND p.id=?1")
     List<EmployeeFullInfo> findEmployeeByPosition(Integer position);
-    @Query(value = "SELECT MAX(salary) " +
-            "FROM employee",nativeQuery = true)
-    Employee findMaxSalary();
-
+    @Query(value = "SELECT e " +
+            "FROM Employee e " +
+            "where e.salary = (select MAX(salary) from Employee)")
+    List<Employee> findMaxSalary();
 
 
 }
