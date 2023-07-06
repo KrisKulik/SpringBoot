@@ -1,15 +1,29 @@
 package ru.skypro.lessons.springboot.weblibrary.pojo;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table (name = "employees")
 public class Employee {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
-    private int salary;
+    private Integer salary;
     private static int idGeneration = 1;
-    private int id;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id")
+    private Position position;
+
 
     public Employee(String name, int salary) {
         this.name = name;
         this.salary = salary;
         this.id = idGeneration++;
+    }
+
+    public Employee() {
+
     }
 
     public String getName() {
@@ -24,11 +38,31 @@ public class Employee {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(Integer salary) {
         this.salary = salary;
     }
-    public int getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static int getIdGeneration() {
+        return idGeneration;
+    }
+
+    public static void setIdGeneration(int idGeneration) {
+        Employee.idGeneration = idGeneration;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     @Override
