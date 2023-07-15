@@ -14,6 +14,8 @@ public class Employee {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
+    @Column(name = "department", nullable = true)
+    private Integer department;
 
 
     public Employee(String name, int salary) {
@@ -63,6 +65,14 @@ public class Employee {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public Integer getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Integer department) {
+        this.department = department;
     }
 
     @Override

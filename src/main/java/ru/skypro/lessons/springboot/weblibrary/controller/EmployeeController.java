@@ -1,11 +1,18 @@
 package ru.skypro.lessons.springboot.weblibrary.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeFullInfo;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeReport;
 import ru.skypro.lessons.springboot.weblibrary.service.EmployeeService;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,5 +83,23 @@ public class EmployeeController {
     @GetMapping("/withHighestSalary")
     public List<EmployeeDTO> getTheHighestSalary() {
         return employeeService.findTheHighestSalary();
+    }
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void uploadEmployeeFromFile(@RequestParam("file") MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
+            int streamSize = inputStream.available();
+            byte[] bytes = new byte[streamSize];
+            inputStream.read(bytes);
+            String json = new String(bytes, StandardCharsets.UTF_8);
+            ObjectMapper objectMapper = new ObjectMapper();
+            EmployeeDTO employeeDTO = objectMapper.readValue(json, EmployeeDTO.class);
+            employeeService.addEmployees(employeeDTO);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @GetMapping("/employeeReport")
+    public List<EmployeeReport> getEmployeeReport() {
+        return employeeService.getReport();
     }
 }
