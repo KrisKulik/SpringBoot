@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeFullInfo;
+import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeReport;
 import ru.skypro.lessons.springboot.weblibrary.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary.repository.PagingAndSortingRepository;
@@ -97,6 +98,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findMaxSalary().stream()
                 .map(EmployeeDTO::fromEmployee)
                 .toList();
+    }
+    @Override
+    public List<EmployeeReport> getReport() {
+        return employeeRepository.getReport();
     }
 }
 

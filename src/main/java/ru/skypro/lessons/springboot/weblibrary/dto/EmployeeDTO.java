@@ -1,20 +1,22 @@
 package ru.skypro.lessons.springboot.weblibrary.dto;
 
 import ru.skypro.lessons.springboot.weblibrary.pojo.Employee;
-import ru.skypro.lessons.springboot.weblibrary.pojo.Position;
+import java.io.Serializable;
 
-public class EmployeeDTO {
+public class EmployeeDTO implements Serializable {
     private Integer id;
     private String name;
     private Integer salary;
-    private Position position;
+    private Integer department;
     private PositionDTO positionDTO;
+
     public static EmployeeDTO fromEmployee(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setId(employee.getId());
         employeeDTO.setName(employee.getName());
         employeeDTO.setSalary(employee.getSalary());
         employeeDTO.setPositionDTO(PositionDTO.fromEntity(employee.getPosition()));
+        employeeDTO.setDepartment(employee.getDepartment());
         return employeeDTO;
 
     }
@@ -24,6 +26,7 @@ public class EmployeeDTO {
         employee.setName(this.getName());
         employee.setSalary(this.getSalary());
         employee.setPosition(this.positionDTO.toEntity());
+        employee.setDepartment(this.getDepartment());
         return employee;
     }
 
@@ -38,7 +41,6 @@ public class EmployeeDTO {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -53,8 +55,15 @@ public class EmployeeDTO {
     public PositionDTO getPositionDTO() {
         return positionDTO;
     }
-
     public void setPositionDTO(PositionDTO positionDTO) {
         this.positionDTO = positionDTO;
+    }
+
+    public Integer getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Integer department) {
+        this.department = department;
     }
 }
