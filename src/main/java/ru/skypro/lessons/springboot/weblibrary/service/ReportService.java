@@ -1,8 +1,10 @@
 package ru.skypro.lessons.springboot.weblibrary.service;
 
-import ru.skypro.lessons.springboot.weblibrary.dto.ReportDTO;
+        import org.springframework.core.io.Resource;
+        import org.springframework.http.ResponseEntity;
 
 public interface ReportService {
-    Integer addReport(ReportDTO reportDTO);
-    ReportDTO getReportById(Integer id);
+    Integer addReport();
+    ResponseEntity<Resource> getReportById(Integer id);
 }
+
